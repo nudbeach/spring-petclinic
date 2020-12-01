@@ -13,8 +13,8 @@ stages:
 - stage: BuildStage
   jobs:
   - job: BuildMaven
-      displayName: 'Build Maven Project'
-      steps:
+    displayName: 'Build Maven Project'
+    steps:
       - task: Maven@3
         displayName: 'Maven Package'
         inputs:
@@ -27,3 +27,17 @@ stages:
           TargetFolder: $(Build.ArtifactStagingDirectory)
       - upload: $(Build.ArtifactStagingDirectory)
         artifact: drop
+- stage: DeployStage
+  jobs:
+  - deployment: VMDeploy
+    displayName: web
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment:
+      name: <environment name>
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo my first deployment        
